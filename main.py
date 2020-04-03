@@ -19,10 +19,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Auth:
     """Google Project Credentials"""
-    CLIENT_ID = '449545398481-ljv63sonve7k581ldlds9td2i2pe6rji.apps.googleusercontent.com'
-    CLIENT_SECRET = 'p10t7RtDpxruWKh3wo-oM-vG'
-    REDIRECT_URI = 'https://appsnubegrupoh.appspot.com/gCallback'
-    # REDIRECT_URI = 'https://localhost:5000/gCallback'
+    CLIENT_ID = '393209363579-cs7u7kk4dpflnhpsdckv1f5pvau4443o.apps.googleusercontent.com'
+    CLIENT_SECRET = 'v1gtkZqsczHmqlPGZ8e4DAsP'
+    REDIRECT_URI = 'https://localhost:5000/gCallback'
     AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
     TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
@@ -31,9 +30,8 @@ class Auth:
 
 class Config:
     """Base config"""
-    APP_NAME = "Test Google Login"
-    SECRET_KEY = os.environ.get("SECRET_KEY") or "somethingsecret"
-
+    APP_NAME = "Practica de seguridad"
+    SECRET_KEY = "somethingsecret"
 
 config = {
     "dev": Config,
@@ -121,8 +119,7 @@ def callback():
             email = user_data['email']
             user = find_user_by_id(email)
             if user is None:
-                dicccionario_usuario = {'id': email, 'name': user_data['name'], 'tokens': json.dumps(token),
-                                        'avatar': user_data['picture']}
+                dicccionario_usuario = {'id': email, 'name': user_data['name'], 'avatar': user_data['picture']}
                 user = User(dicccionario_usuario)
                 save_user(user)
                 user = find_user_by_id(email)
@@ -152,3 +149,17 @@ def callback():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@app.route('/')
+@login_required
+def inicio():
+    user = current_user
+    return render_template("inicio.html", user=user)
+
+
+if __name__ == '__main__':
+    # This is used when running locally only. When deploying to Google App
+    # Engine, a webserver process such as Gunicorn will serve the app. This
+    # can be configured by adding an `entrypoint` to app.yaml.
+    app.run(ssl_context='adhoc', host='localhost', debug=True)
