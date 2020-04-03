@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Hola</title>
+{% extends "base.html" %}
+{% block head %}
+<meta charset="UTF-8">
+<title>Aplicacion</title>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+{% endblock %}
+
+{% block content %}
+
 </head>
 <body>
-<h1>Suba sus documentos</h1>
+<div class="container-fluid">
+    <hr>
+    <div class="container-header text-center"><h3><b>Suba sus documentos, estar&aacute;n seguros</b></h3></div>
+    <hr>
+    <div class="row flex-x1-nowrap" style="margin-bottom: 10px;">
+        <div class="offset-lg-2 col-lg-7 col-md-9">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon"><b>Archivo a subir</b></span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile"
+                           aria-describedby="inputGroupFileAddon" name="archivoSubir" required
+                           placeholder="Escoge una archivo" lang="es">
+                    <label class="custom-file-label" for="inputGroupFile">Escoge una archivo</label>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script>
+    $("#inputGroupFile").on("change", function () {
+        var fileName = $(this).val();
+        $(this).next(".custom-file-label").html(fileName);
+    })
+</script>
 </body>
-</html>
+{% endblock %}

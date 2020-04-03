@@ -3,7 +3,7 @@ import os
 
 import flask
 from flask import Flask, url_for, redirect, \
-    render_template, session, request
+    render_template, session, request, send_from_directory
 from flask_login import LoginManager, login_required, current_user, logout_user, login_user
 from mysqlx import Auth
 from requests.exceptions import HTTPError
@@ -156,6 +156,20 @@ def logout():
 def inicio():
     user = current_user
     return render_template("inicio.html", user=user)
+
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('resources/static/js', path)
+
+
+@app.route('/css/<path:path>')
+def send_css(path):
+    return send_from_directory('resources/static/css', path)
+
+
+@app.route('/img/<path:path>')
+def send_img(path):
+    return send_from_directory('resources/static/img', path)
 
 
 if __name__ == '__main__':
