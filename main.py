@@ -12,6 +12,8 @@ from requests_oauthlib import OAuth2Session
 from mongo.entity.usuario import User
 from mongo.repository.usuario_repository import find_user_by_id, replace_user_by_id, update_user_by_id, save_user
 
+from servicios.servicios_basicos import servicios_basicos_bp
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 """App Configuration"""
@@ -32,6 +34,7 @@ class Config:
     """Base config"""
     APP_NAME = "Practica de seguridad"
     SECRET_KEY = "somethingsecret"
+
 
 config = {
     "dev": Config,
@@ -157,6 +160,7 @@ def inicio():
     user = current_user
     return render_template("inicio.html", user=user)
 
+
 @app.route('/js/<path:path>')
 def send_js(path):
     return send_from_directory('resources/static/js', path)
@@ -171,6 +175,8 @@ def send_css(path):
 def send_img(path):
     return send_from_directory('resources/static/img', path)
 
+
+app.register_blueprint(servicios_basicos_bp, url_prefix="/serviciosBasicos/")
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App

@@ -14,20 +14,22 @@
     <hr>
     <div class="container-header text-center"><h3><b>Suba sus documentos, estar&aacute;n seguros</b></h3></div>
     <hr>
-    <div class="row flex-x1-nowrap" style="margin-bottom: 10px;">
+    <div class="row flex-x1-nowrap text-center" style="margin-bottom: 10px;">
         <div class="offset-lg-2 col-lg-7 col-md-9">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupFileAddon"><b>Archivo a subir</b></span>
+            <form lang="es" action="/serviciosBasicos/subirArchivo" method="POST" id="myForm" enctype="multipart/form-data">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroupFileAddon"><b>Archivo a subir</b></span>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile"
+                               aria-describedby="inputGroupFileAddon" name="archivoSubir" required
+                               placeholder="Escoge una archivo" lang="es">
+                        <label class="custom-file-label" for="inputGroupFile">Escoge una archivo</label>
+                    </div>
                 </div>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="inputGroupFile"
-                           aria-describedby="inputGroupFileAddon" name="archivoSubir" required
-                           placeholder="Escoge una archivo" lang="es">
-                    <label class="custom-file-label" for="inputGroupFile">Escoge una archivo</label>
-                </div>
-
-            </div>
+                <button type="submit" class="btn btn-primary" style="margin-left: 130px;">Subir archivo</button>
+            </form>
         </div>
     </div>
 </div>
@@ -35,9 +37,9 @@
 {% include "footer.html" %}
 <script>
     $("#inputGroupFile").on("change", function () {
-        var fileName = $(this).val();
+        var fileName = $(this).val().replace(/^.*\\/, "");
         $(this).next(".custom-file-label").html(fileName);
-    })
+    });
 </script>
 </body>
 {% endblock %}
