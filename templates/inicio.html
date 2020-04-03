@@ -15,8 +15,10 @@
     <div class="container-header text-center"><h3><b>Suba sus documentos, estar&aacute;n seguros</b></h3></div>
     <hr>
     <div class="row flex-x1-nowrap text-center" style="margin-bottom: 10px;">
-        <div class="offset-lg-2 col-lg-7 col-md-9">
-            <form lang="es" action="/serviciosBasicos/subirArchivo" method="POST" id="myForm" enctype="multipart/form-data">
+        <div class="offset-lg-3 col-lg-6 col-md-8">
+            {% if user.password != '' %}
+            <form lang="es" action="/serviciosBasicos/subirArchivo" method="POST" id="myForm"
+                  enctype="multipart/form-data">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroupFileAddon"><b>Archivo a subir</b></span>
@@ -28,8 +30,13 @@
                         <label class="custom-file-label" for="inputGroupFile">Escoge una archivo</label>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" style="margin-left: 130px;">Subir archivo</button>
+                <button type="button" class="btn btn-primary">Subir archivo</button>
             </form>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+                No tiene establecida ninguna contrase&ntilde;a para cifrar los ficheros, pulse <a href="/serviciosBasicos/establecerPassword" class="alert-link">aqu&iacute;</a> para establecerla.
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

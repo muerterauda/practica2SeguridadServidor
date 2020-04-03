@@ -10,12 +10,14 @@ class User(UserMixin):
         self.id = diccionario.get('id')
         self.name = diccionario.get('name')
         self.avatar = diccionario.get('avatar')
-        self.__admin = diccionario.get('admin')
-        if not self.__admin:
-            self.__admin = False
+        self.__password = diccionario.get('password')
 
     def user_to_dict(self) -> dict:
-        return {"id": self.id, "name": self.name, "avatar": self.avatar, "admin": self.__admin}
+        return {"id": self.id, "name": self.name, "avatar": self.avatar, 'password': self.__password}
+
+    @property
+    def password(self):
+        return self.__password
 
     @property
     def id_mongo(self):
@@ -24,10 +26,6 @@ class User(UserMixin):
     @property
     def id_mongo_str(self):
         return str(self.__id_mongo)
-
-    @property
-    def get_admin(self):
-        return self.__admin
 
     @property
     def nombre_email(self):

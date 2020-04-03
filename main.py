@@ -122,7 +122,8 @@ def callback():
             email = user_data['email']
             user = find_user_by_id(email)
             if user is None:
-                dicccionario_usuario = {'id': email, 'name': user_data['name'], 'avatar': user_data['picture']}
+                dicccionario_usuario = {'id': email, 'name': user_data['name'], 'avatar': user_data['picture'],
+                                        'password': ''}
                 user = User(dicccionario_usuario)
                 save_user(user)
                 user = find_user_by_id(email)
