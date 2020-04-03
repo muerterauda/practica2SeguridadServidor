@@ -1,51 +1,154 @@
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms
-from cryptography.hazmat.backends import default_backend
+import json
 import os
-import shutil
 
-path = '.'
-path_secure = './secure/'
-path_unsecure = './unsecure/'
+import flask
+from flask import Flask, url_for, redirect, \
+    render_template, session, request
+from flask_login import LoginManager, login_required, current_user, logout_user, login_user
+from mysqlx import Auth
+from requests.exceptions import HTTPError
+from requests_oauthlib import OAuth2Session
 
-shutil.rmtree(path_secure, ignore_errors=True)
-shutil.rmtree(path_unsecure, ignore_errors=True)
-os.mkdir(path_secure)
-os.mkdir(path_unsecure)
+from mongo.entity.usuario import User
+from mongo.repository.usuario_repository import find_user_by_id, replace_user_by_id, update_user_by_id, save_user
 
-files = []
-for r, d, f in os.walk(path):
-    for file in f:
-        if '.txt' in file:
-            files.append(os.path.join(r, file))
+basedir = os.path.abspath(os.path.dirname(__file__))
 
-for f in files:
-    print(f)
+"""App Configuration"""
 
-chunk_size = 256
 
-nonce = bytes("0123456789012345", 'utf-8')
-key = bytes("01234567890123456789012345678901", 'utf-8')
+class Auth:
+    """Google Project Credentials"""
+    CLIENT_ID = '449545398481-ljv63sonve7k581ldlds9td2i2pe6rji.apps.googleusercontent.com'
+    CLIENT_SECRET = 'p10t7RtDpxruWKh3wo-oM-vG'
+    REDIRECT_URI = 'https://appsnubegrupoh.appspot.com/gCallback'
+    # REDIRECT_URI = 'https://localhost:5000/gCallback'
+    AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
+    TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
+    USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
+    SCOPE = ['profile', 'email']
 
-algorithm = algorithms.ChaCha20(key, nonce)
-cipher = Cipher(algorithm, mode=None, backend=default_backend())
-encryptor = cipher.encryptor()
 
-file_to_put = "ejemplo.txt"
-with open(file_to_put, "rb") as source, open(path_secure + file_to_put, "wb+") as sink:
-    byte = source.read(chunk_size)
-    while byte:
-        sink.write(encryptor.update(byte))
-        byte = source.read(chunk_size)
-    source.close()
-    sink.close()
+class Config:
+    """Base config"""
+    APP_NAME = "Test Google Login"
+    SECRET_KEY = os.environ.get("SECRET_KEY") or "somethingsecret"
 
-decryptor = cipher.decryptor()
 
-file_to_get = "ejemplo.txt"
-with open(path_secure + file_to_get, "rb") as source, open(path_unsecure + file_to_get, "wb+") as sink:
-    byte = source.read(chunk_size)
-    while byte:
-        sink.write(decryptor.update(byte))
-        byte = source.read(chunk_size)
-    source.close()
-    sink.close()
+config = {
+    "dev": Config,
+    "default": Config
+}
+
+"""APP creation and configuration"""
+app = Flask(__name__, static_folder="static")
+app.config.from_object(config['dev'])
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
+login_manager.session_protection = "strong"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    if user_id:
+        return find_user_by_id(user_id)
+    else:
+        return None
+
+
+""" OAuth Session creation """
+
+
+def get_google_auth(state=None, token=None):
+    if token:
+        return OAuth2Session(Auth.CLIENT_ID, token=token)
+    if state:
+        return OAuth2Session(
+            Auth.CLIENT_ID,
+            state=state,
+            redirect_uri=Auth.REDIRECT_URI)
+    oauth = OAuth2Session(
+        Auth.CLIENT_ID,
+        redirect_uri=Auth.REDIRECT_URI,
+        scope=Auth.SCOPE)
+    return oauth
+
+
+@app.route('/login')
+def login():
+    if current_user.is_authenticated:
+        next_f = flask.request.args.get('next')
+        if not next_f:
+            next_f = session.get('next_f')
+        return flask.redirect(next_f or flask.url_for('inicio'))
+    google = get_google_auth()
+    next_f = flask.request.args.get('next')
+    if next_f:
+        auth_url, state = google.authorization_url(
+            Auth.AUTH_URI, access_type='offline')
+        session['next_f'] = next_f
+    else:
+        auth_url, state = google.authorization_url(
+            Auth.AUTH_URI, access_type='offline')
+    session['oauth_state'] = state
+    return render_template('login.html', auth_url=auth_url)
+
+
+@app.route('/gCallback')
+def callback():
+    next_f = session.get('next_f')
+    if current_user is not None and current_user.is_authenticated:
+        return redirect(url_for(next_f))
+    if 'error' in request.args:
+        if request.args.get('error') == 'access_denied':
+            return 'You denied access.'
+        return 'Error encountered.'
+    if 'code' not in request.args and 'state' not in request.args:
+        return redirect(url_for('login'))
+    else:
+        google = get_google_auth(state=session['oauth_state'])
+        try:
+            token = google.fetch_token(
+                Auth.TOKEN_URI,
+                client_secret=Auth.CLIENT_SECRET,
+                authorization_response=request.url)
+        except HTTPError:
+            return 'HTTPError occurred.'
+        google = get_google_auth(token=token)
+        resp = google.get(Auth.USER_INFO)
+        if resp.status_code == 200:
+            user_data = resp.json()
+            email = user_data['email']
+            user = find_user_by_id(email)
+            if user is None:
+                dicccionario_usuario = {'id': email, 'name': user_data['name'], 'tokens': json.dumps(token),
+                                        'avatar': user_data['picture']}
+                user = User(dicccionario_usuario)
+                save_user(user)
+                user = find_user_by_id(email)
+            else:
+                cambiado = False
+                if user_data['name'] != user.name:
+                    user.name = user_data['name']
+                    cambiado = True
+                if user.avatar != user_data['picture']:
+                    user.avatar = user_data['picture']
+                    cambiado = True
+                user.access_tokens = json.dumps(token)
+                if cambiado:
+                    replace_user_by_id(user.id, user)
+                else:
+                    update_user_by_id(user.id, {"tokens": user.access_tokens})
+            login_user(user)
+            if next_f:
+                return redirect(next_f)
+            else:
+                return redirect(url_for('inicio'))
+        return 'No se pudo conseguir su informacion'
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
