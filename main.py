@@ -139,9 +139,9 @@ def callback():
                     cambiado = True
                 user.access_tokens = json.dumps(token)
                 if cambiado:
-                    replace_user_by_id(user.id, user)
+                    replace_user_by_id(user.id_mongo, user)
                 else:
-                    update_user_by_id(user.id, {"tokens": user.access_tokens})
+                    update_user_by_id(user.id_mongo, {"tokens": user.access_tokens})
             login_user(user)
             if next_f:
                 return redirect(next_f)
@@ -169,6 +169,10 @@ def inicio():
 
     # Lists key rings
     response = client.list_key_rings(parent)
+    ruta = "projects/practicasegurdadatrest/locations/global/keyRings/my_keyring/cryptoKeys/seguridadAtRest"
+    # client.get_crypto_key()
+    response = client.get_crypto_key(ruta)
+
     response_list = list(response)
 
     if len(response_list) > 0:
