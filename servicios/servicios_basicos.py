@@ -1,6 +1,9 @@
 from flask import Blueprint, redirect, url_for, request, render_template, jsonify
 from flask_login import login_required, current_user, login_user
 from mongo.repository.usuario_repository import update_user_by_id
+from werkzeug.utils import secure_filename
+
+import os
 
 servicios_basicos_bp = Blueprint('Seguridad_servicios_basicos', __name__, template_folder='templates')
 
@@ -27,4 +30,10 @@ def establecer_password():
 def recoger_datos_creacion():
     user = current_user
     archivo = request.files.getlist("archivoSubir")
+    from main import uploads_dir
+    uploads_dir_user = os.path.join(uploads_dir, user.id_mongo)
+    if not os.path.exists(uploads_dir_user):
+        os.makedirs(uploads_dir_user)
+    filename = secure_filename(archivo[0].filename)
+    archivo[0].save(os.path.join(uploads_dir_user, filename))
     return redirect(url_for('inicio'))

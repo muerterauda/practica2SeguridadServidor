@@ -192,6 +192,11 @@ def send_img(path):
 
 
 app.register_blueprint(servicios_basicos_bp, url_prefix="/serviciosBasicos/")
+uploads_dir = os.path.join(app.instance_path, 'archivos')
+uploads_dir = uploads_dir.replace('instance', '')
+uploads_dir = uploads_dir.replace('\\\\', '\\')
+if not os.path.exists(uploads_dir):
+    os.makedirs(uploads_dir)
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
