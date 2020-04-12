@@ -169,19 +169,9 @@ def inicio():
     parent = client.location_path(project_id, location)
 
     # Lists key rings
-    response = client.list_key_rings(parent)
     ruta = "projects/practicasegurdadatrest/locations/global/keyRings/my_keyring/cryptoKeys/seguridadAtRest"
-    # client.get_crypto_key()
     response = client.get_crypto_key(ruta)
-
-    response_list = list(response)
-
-    if len(response_list) > 0:
-        print('Key rings:')
-        for key_ring in response_list:
-            print(key_ring.name)
-    else:
-        print('No key rings found.')
+    print(response)
 
     return render_template("inicio.html", user=user)
 
