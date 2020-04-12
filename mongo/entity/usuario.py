@@ -19,6 +19,9 @@ class User(UserMixin):
     def password(self):
         return self.__password
 
+    def set_password(self, password):
+        self.__password = password
+
     @property
     def id_mongo(self):
         return self.__id_mongo

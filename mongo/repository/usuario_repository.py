@@ -1,3 +1,5 @@
+from bson import ObjectId
+
 from mongo.entity.usuario import User
 from mongo.mongo_manager import usuarios
 
@@ -13,8 +15,8 @@ def find_user_by_id(user_id) -> User:
 
 
 def replace_user_by_id(user_id, new_user: User):
-    usuarios.replace_one({"id": user_id}, new_user.user_to_dict())
+    return usuarios.replace_one({"_id": ObjectId(user_id)}, new_user.user_to_dict())
 
 
 def update_user_by_id(user_id, actualizacion_user: dict):
-    usuarios.update_one({"id": user_id}, {"$set": actualizacion_user})
+    return usuarios.update_one({"_id": ObjectId(user_id)}, {"$set": actualizacion_user}, upsert=False)

@@ -27,14 +27,14 @@
                         <input type="file" class="custom-file-input" id="inputGroupFile"
                                aria-describedby="inputGroupFileAddon" name="archivoSubir" required
                                placeholder="Escoge una archivo" lang="es">
-                        <label class="custom-file-label" for="inputGroupFile">Escoge una archivo</label>
+                        <label class="custom-file-label" for="inputGroupFile">Escoge un archivo</label>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary">Subir archivo</button>
+                <button type="button" class="btn btn-primary" style="margin-left: 125px;">Subir archivo</button>
             </form>
             {% else %}
             <div class="alert alert-danger" role="alert">
-                No tiene establecida ninguna contrase&ntilde;a para cifrar los ficheros, pulse <a href="/serviciosBasicos/establecerPassword" class="alert-link">aqu&iacute;</a> para establecerla.
+                No tiene establecida ninguna contrase&ntilde;a para cifrar los ficheros, pulse <a href="/serviciosBasicos/establecerPasswordHTML" class="alert-link">aqu&iacute;</a> para establecerla.
             </div>
             {% endif %}
         </div>
