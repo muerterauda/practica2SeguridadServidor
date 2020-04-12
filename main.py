@@ -15,8 +15,8 @@ from servicios.servicios_basicos import servicios_basicos_bp
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-#ruta = "C:\\Users\\Thoriones\\Downloads\\practicasegurdadatrest-481ffbd20405.json"
-ruta = "C:\\Users\\Muerterauda\\Desktop\\practicasegurdadatrest-481ffbd20405.json"
+ruta = "C:\\Users\\Thoriones\\Downloads\\practicasegurdadatrest-481ffbd20405.json"
+# ruta = "C:\\Users\\Muerterauda\\Desktop\\practicasegurdadatrest-481ffbd20405.json"
 os.environ[ 'GOOGLE_APPLICATION_CREDENTIALS'] = ruta
 
 """App Configuration"""

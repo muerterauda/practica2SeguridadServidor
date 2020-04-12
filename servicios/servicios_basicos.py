@@ -1,10 +1,10 @@
+import os
+
 from flask import Blueprint, redirect, url_for, request, render_template, jsonify
 from flask_login import login_required, current_user
-
-from mongo.repository.usuario_repository import update_user_by_id
 from werkzeug.utils import secure_filename
 
-import os
+from mongo.repository.usuario_repository import update_user_by_id
 
 servicios_basicos_bp = Blueprint('Seguridad_servicios_basicos', __name__, template_folder='templates')
 
@@ -37,4 +37,10 @@ def recoger_datos_creacion():
         os.makedirs(uploads_dir_user)
     filename = secure_filename(archivo[0].filename)
     archivo[0].save(os.path.join(uploads_dir_user, filename))
+    from google.cloud import kms_v1
+    client = kms_v1.KeyManagementServiceClient()
+    ruta = "projects/practicasegurdadatrest/locations/global/keyRings/my_keyring/cryptoKeys/seguridadAtRest"
+    response = client.encrypt(ruta, archivo[0].read())
+    with open(os.path.join(uploads_dir_user, filename+".enc"), 'wb') as f:
+        f.write(response.ciphertext)
     return redirect(url_for('inicio'))
