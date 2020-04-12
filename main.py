@@ -11,10 +11,12 @@ from requests_oauthlib import OAuth2Session
 
 from mongo.entity.usuario import User
 from mongo.repository.usuario_repository import find_user_by_id, replace_user_by_id, update_user_by_id, save_user
-
 from servicios.servicios_basicos import servicios_basicos_bp
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+os.environ[
+    'GOOGLE_APPLICATION_CREDENTIALS'] = "C:\\Users\\Thoriones\\Downloads\\practicasegurdadatrest-481ffbd20405.json"
 
 """App Configuration"""
 
@@ -159,6 +161,23 @@ def logout():
 @login_required
 def inicio():
     user = current_user
+    from google.cloud import kms_v1
+    project_id = 'practicasegurdadatrest'
+    location = 'global'
+    client = kms_v1.KeyManagementServiceClient()
+    parent = client.location_path(project_id, location)
+
+    # Lists key rings
+    response = client.list_key_rings(parent)
+    response_list = list(response)
+
+    if len(response_list) > 0:
+        print('Key rings:')
+        for key_ring in response_list:
+            print(key_ring.name)
+    else:
+        print('No key rings found.')
+
     return render_template("inicio.html", user=user)
 
 
