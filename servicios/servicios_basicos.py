@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, url_for, request, render_template, jsonify
-from flask_login import login_required, current_user, login_user
+from flask_login import login_required, current_user
+
 from mongo.repository.usuario_repository import update_user_by_id
 
 servicios_basicos_bp = Blueprint('Seguridad_servicios_basicos', __name__, template_folder='templates')
@@ -26,5 +27,5 @@ def establecer_password():
 @login_required
 def recoger_datos_creacion():
     user = current_user
-    archivo = request.files.getlist("archivoSubir")
+    archivos = request.files.getlist("archivoSubir")
     return redirect(url_for('inicio'))
