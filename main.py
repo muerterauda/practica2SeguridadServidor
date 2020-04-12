@@ -137,9 +137,9 @@ def callback():
                     cambiado = True
                 user.access_tokens = json.dumps(token)
                 if cambiado:
-                    replace_user_by_id(user.id, user)
+                    replace_user_by_id(user.id_mongo, user)
                 else:
-                    update_user_by_id(user.id, {"tokens": user.access_tokens})
+                    update_user_by_id(user.id_mongo, {"tokens": user.access_tokens})
             login_user(user)
             if next_f:
                 return redirect(next_f)
