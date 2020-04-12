@@ -15,8 +15,9 @@ from servicios.servicios_basicos import servicios_basicos_bp
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-os.environ[
-    'GOOGLE_APPLICATION_CREDENTIALS'] = "C:\\Users\\Thoriones\\Downloads\\practicasegurdadatrest-481ffbd20405.json"
+#ruta = "C:\\Users\\Thoriones\\Downloads\\practicasegurdadatrest-481ffbd20405.json"
+ruta = "C:\\Users\\Muerterauda\\Desktop\\practicasegurdadatrest-481ffbd20405.json"
+os.environ[ 'GOOGLE_APPLICATION_CREDENTIALS'] = ruta
 
 """App Configuration"""
 
@@ -191,6 +192,11 @@ def send_img(path):
 
 
 app.register_blueprint(servicios_basicos_bp, url_prefix="/serviciosBasicos/")
+uploads_dir = os.path.join(app.instance_path, 'archivos')
+uploads_dir = uploads_dir.replace('instance', '')
+uploads_dir = uploads_dir.replace('\\\\', '\\')
+if not os.path.exists(uploads_dir):
+    os.makedirs(uploads_dir)
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
