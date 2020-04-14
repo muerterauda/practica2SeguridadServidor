@@ -17,7 +17,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 ruta = "C:\\Users\\Thoriones\\Downloads\\practicasegurdadatrest-481ffbd20405.json"
 # ruta = "C:\\Users\\Muerterauda\\Desktop\\practicasegurdadatrest-481ffbd20405.json"
-os.environ[ 'GOOGLE_APPLICATION_CREDENTIALS'] = ruta
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = ruta
+os.environ[
+    'PROJECT_KEY_PATH'] = "projects/practicasegurdadatrest/locations/global/keyRings/my_keyring/cryptoKeys/seguridadAtRest"
+os.environ['PROJECT_ID'] = "practicasegurdadatrest"
 
 """App Configuration"""
 

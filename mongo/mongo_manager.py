@@ -12,7 +12,9 @@ class MongoManager:
         """
         username = 'seguridad'
         password = 'password_1'
-        self.collection = MongoClient('mongodb://%s:%s@localhost:27017' % (username, password), authSource='practica2Seguridad')['practica2Seguridad'][collection_name]
+        self.collection = \
+        MongoClient('mongodb://%s:%s@localhost:27017' % (username, password), authSource='practica2Seguridad')[
+            'practica2Seguridad'][collection_name]
 
     @staticmethod
     def bson_encoder(s):
