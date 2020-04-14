@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 
 from mongo.repository.usuario_repository import update_user_by_id
 from utils.cipher.file_encoding import cifrar_archivo
-from utils.key_management.keys import generar_clave
+from utils.key_management.keys import generar_clave, cifrar_clave
 
 servicios_basicos_bp = Blueprint('Seguridad_servicios_basicos', __name__, template_folder='templates')
 
@@ -43,11 +43,15 @@ def recoger_datos_creacion():
     archivo.save(path_guardado)
     # Obtenemos metadatos
     metadatos = os.path.getctime(path_guardado)
-    # Generamos key
+    # Generamos key (esta clave ya está cifrada)
     key = generar_clave(user.password, metadatos)
     # Ciframos archivo
     cifrado = cifrar_archivo(archivo, metadatos, key)
     # Guardamos archivo cifrado
     with open(os.path.join(uploads_dir_user, filename + ".enc"), 'wb') as f:
         f.write(cifrado)
+    # Ciframos la clave
+    ciphered_key = cifrar_clave(key)
+    # Asociamos el archivo al usuario
+    user.guardar_archivo(filename, ciphered_key)
     return redirect(url_for('inicio'))

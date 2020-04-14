@@ -6,11 +6,21 @@ from cryptography.hazmat.primitives import hashes, hmac
 from utils.backend import backend
 
 
-def generar_hash(secreto, metadatos):
-    h = hashlib.sha256()
-    h.update(bytes(secreto))
-    h.update(bytes(metadatos))
-    return h.digest()
+def generar_hash(valor, tipo=None, datos_adicionales=None):
+    if tipo == "128":
+        h = hashlib.shake_128()
+    else:
+        h = hashlib.sha256()
+    valor = valor.encode('utf-8')
+    h.update(bytes(valor))
+    if datos_adicionales:
+        datos_adicionales = str(datos_adicionales).encode('utf-8')
+        h.update(bytes(datos_adicionales))
+    if tipo:
+        hash = h.digest(16)
+    else:
+        hash = h.digest()
+    return hash
 
 
 def generate_mac(key, message):

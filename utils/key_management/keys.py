@@ -6,7 +6,10 @@ from utils.cipher.hash import generar_hash
 
 
 def generar_clave(secreto, metadatos):
-    key = generar_hash(secreto, metadatos)
+    return generar_hash(valor=secreto, datos_adicionales=metadatos)
+
+
+def cifrar_clave(key):
     client = kms_v1.KeyManagementServiceClient()
     response = client.encrypt(os.environ['PROJECT_KEY_PATH'], key)
     return response.ciphertext

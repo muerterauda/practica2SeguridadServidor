@@ -1,9 +1,12 @@
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms
 
 from utils.backend import backend
+from utils.cipher.hash import generar_hash
 
 
 def cifrar_archivo(archivo, metadatos, key):
+    metadatos = str(metadatos)
+    metadatos = generar_hash(valor=metadatos, tipo="128")
     algorithm = algorithms.ChaCha20(key, metadatos)
     cipher = Cipher(algorithm, mode=None, backend=backend)
     encryptor = cipher.encryptor()
@@ -11,6 +14,8 @@ def cifrar_archivo(archivo, metadatos, key):
 
 
 def descifrar_archivo(archivo_cifrado, metadatos, key):
+    metadatos = str(metadatos)
+    metadatos = generar_hash(valor=metadatos, tipo="128")
     algorithm = algorithms.ChaCha20(key, metadatos)
     cipher = Cipher(algorithm, mode=None, backend=backend)
     encryptor = cipher.decryptor()
