@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-
+from datetime import datetime
 
 class User(UserMixin):
 
@@ -36,21 +36,31 @@ class User(UserMixin):
     def nombre_email(self):
         return self.id.split('@')[0]
 
-    def get_secreto_encriptado(self, nombre):
+    def eliminar_archivo(self, nombre):
+        self.__archivos.pop(nombre, None)
+
+    def get_clave_encriptado(self, nombre):
         return self.__archivos.get(nombre)
 
     def comprobar_archivo(self, nombre):
         return nombre in self.__archivos
 
-    def guardar_archivo(self, nombre, secreto_encriptado):
-        self.__archivos[nombre] = secreto_encriptado
+    def guardar_archivo(self, nombre, clave_encriptado):
+        self.__archivos[nombre] = {'secreto': clave_encriptado, 'fecha_subida': datetime.now().strftime("%m/%d/%Y, %H:%M:%S")}
+
+    def get_list_archivos(self):
+        returned = []
+        if self.__archivos is not None:
+            for x,y in self.__archivos.items():
+                returned.append((x, y['fecha_subida']))
+        return returned
 
     @staticmethod
     def __generar_dict_archivos(diccionario: list):
         returned = {}
         if diccionario is not None:
             for x in diccionario:
-                returned[x[0]] = x[1]
+                returned[x[0]] = {'secreto': x[1], 'fecha_subida': x[2]}
         return returned
 
     @staticmethod
@@ -58,7 +68,7 @@ class User(UserMixin):
         returned = []
         if diccionario is not None:
             for x,y in diccionario.items():
-                returned.append((x, y))
+                returned.append((x, y['secreto'], y['fecha_subida']))
         return returned
 
     def __str__(self):
