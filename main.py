@@ -165,17 +165,6 @@ def logout():
 @login_required
 def inicio():
     user = current_user
-    from google.cloud import kms_v1
-    project_id = 'practicasegurdadatrest'
-    location = 'global'
-    client = kms_v1.KeyManagementServiceClient()
-    parent = client.location_path(project_id, location)
-
-    # Lists key rings
-    ruta = "projects/practicasegurdadatrest/locations/global/keyRings/my_keyring/cryptoKeys/seguridadAtRest"
-    response = client.get_crypto_key(ruta)
-    print(response)
-
     return render_template("inicio.html", user=user)
 
 
