@@ -36,14 +36,14 @@ class User(UserMixin):
     def nombre_email(self):
         return self.id.split('@')[0]
 
-    def get_secreto_encriptado(self, nombre):
+    def get_clave_encriptado(self, nombre):
         return self.__archivos.get(nombre)
 
     def comprobar_archivo(self, nombre):
         return nombre in self.__archivos
 
-    def guardar_archivo(self, nombre, secreto_encriptado):
-        self.__archivos[nombre] = secreto_encriptado
+    def guardar_archivo(self, nombre, clave_encriptado):
+        self.__archivos[nombre] = clave_encriptado
 
     @staticmethod
     def __generar_dict_archivos(diccionario: list):
