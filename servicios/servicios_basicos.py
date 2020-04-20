@@ -34,12 +34,10 @@ def descargar_archivo():
     user = current_user
     nombre_archivo = request.values.get("nombre")
     secreto = request.values.get("secreto")
-    nombre_archivo = 'Buy_3.jpg'
     from main import uploads_dir
     uploads_dir_user = os.path.join(uploads_dir, user.id_mongo)
     path_guardado = os.path.join(uploads_dir_user, nombre_archivo)
-    with open(path_guardado, "rb") as f:
-        cifrado = f.read()
+    cifrado = open(path_guardado, "rb").read()
     with open(path_guardado + ".metadata", "rb") as f:
         metadatos = f.read()
     key = generar_clave(user.password, metadatos)
@@ -61,6 +59,7 @@ def recoger_datos_creacion():
     filename = secure_filename(archivo.filename)
     path_guardado = os.path.join(uploads_dir_user, filename)
     archivo.save(path_guardado)
+    archivo = open(path_guardado, 'rb').read()
     # Obtenemos metadatos
     metadatos = os.path.getctime(path_guardado)
     # Eliminamos el archivo original

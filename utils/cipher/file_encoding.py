@@ -10,7 +10,7 @@ def cifrar_archivo(archivo, metadatos, key):
     algorithm = algorithms.ChaCha20(key, metadatos)
     cipher = Cipher(algorithm, mode=None, backend=backend)
     encryptor = cipher.encryptor()
-    return encryptor.update(archivo.read())
+    return encryptor.update(archivo)
 
 
 def descifrar_archivo(archivo_cifrado, metadatos, key):
