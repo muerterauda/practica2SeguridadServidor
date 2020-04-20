@@ -5,6 +5,8 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
 from mongo.repository.usuario_repository import update_user_by_id
+from utils.cipher.file_encoding import cifrar_archivo
+from utils.key_management.keys import generar_clave, cifrar_clave
 
 servicios_basicos_bp = Blueprint('Seguridad_servicios_basicos', __name__, template_folder='templates')
 
@@ -41,17 +43,26 @@ def descargar_archivo():
 @login_required
 def recoger_datos_creacion():
     user = current_user
-    archivo = request.files.getlist("archivoSubir")
+    archivo = request.files.getlist("archivoSubir")[0]
+    # Guardar archivo
     from main import uploads_dir
     uploads_dir_user = os.path.join(uploads_dir, user.id_mongo)
     if not os.path.exists(uploads_dir_user):
         os.makedirs(uploads_dir_user)
-    filename = secure_filename(archivo[0].filename)
-    archivo[0].save(os.path.join(uploads_dir_user, filename))
-    from google.cloud import kms_v1
-    client = kms_v1.KeyManagementServiceClient()
-    ruta = "projects/practicasegurdadatrest/locations/global/keyRings/my_keyring/cryptoKeys/seguridadAtRest"
-    response = client.encrypt(ruta, archivo[0].read())
-    with open(os.path.join(uploads_dir_user, filename+".enc"), 'wb') as f:
-        f.write(response.ciphertext)
+    filename = secure_filename(archivo.filename)
+    path_guardado = os.path.join(uploads_dir_user, filename)
+    archivo.save(path_guardado)
+    # Obtenemos metadatos
+    metadatos = os.path.getctime(path_guardado)
+    # Generamos key (esta clave ya está cifrada)
+    key = generar_clave(user.password, metadatos)
+    # Ciframos archivo
+    cifrado = cifrar_archivo(archivo, metadatos, key)
+    # Guardamos archivo cifrado
+    with open(os.path.join(uploads_dir_user, filename + ".enc"), 'wb') as f:
+        f.write(cifrado)
+    # Ciframos la clave
+    ciphered_key = cifrar_clave(key)
+    # Asociamos el archivo al usuario
+    user.guardar_archivo(filename, ciphered_key)
     return redirect(url_for('inicio'))

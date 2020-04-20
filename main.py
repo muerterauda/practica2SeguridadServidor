@@ -15,9 +15,12 @@ from servicios.servicios_basicos import servicios_basicos_bp
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# ruta = "C:\\Users\\Thoriones\\Downloads\\practicasegurdadatrest-481ffbd20405.json"
-ruta = "C:\\Users\\Muerterauda\\Desktop\\practicasegurdadatrest-481ffbd20405.json"
-os.environ[ 'GOOGLE_APPLICATION_CREDENTIALS'] = ruta
+ruta = "C:\\Users\\Thoriones\\Downloads\\practicasegurdadatrest-481ffbd20405.json"
+# ruta = "C:\\Users\\Muerterauda\\Desktop\\practicasegurdadatrest-481ffbd20405.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = ruta
+os.environ[
+    'PROJECT_KEY_PATH'] = "projects/practicasegurdadatrest/locations/global/keyRings/my_keyring/cryptoKeys/seguridadAtRest"
+os.environ['PROJECT_ID'] = "practicasegurdadatrest"
 
 """App Configuration"""
 
@@ -162,16 +165,6 @@ def logout():
 @login_required
 def inicio():
     user = current_user
-    from google.cloud import kms_v1
-    project_id = 'practicasegurdadatrest'
-    location = 'global'
-    client = kms_v1.KeyManagementServiceClient()
-    parent = client.location_path(project_id, location)
-
-    # Lists key rings
-    ruta = "projects/practicasegurdadatrest/locations/global/keyRings/my_keyring/cryptoKeys/seguridadAtRest"
-    response = client.get_crypto_key(ruta)
-
     return render_template("inicio.html", user=user)
 
 
