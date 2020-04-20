@@ -1,6 +1,7 @@
 import os
+import io
 
-from flask import Blueprint, redirect, url_for, request, render_template, jsonify, send_from_directory
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify, send_from_directory, send_file
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -45,10 +46,9 @@ def descargar_archivo():
     metadatos = float(metadatos[0])
     key = generar_clave(user.password, metadatos)
     valor_claro = descifrar_archivo(cifrado, metadatos, key)
-    with open(path_guardado + "2", "wb") as f:
-        f.write(valor_claro)
-    archivo = send_from_directory(directory=uploads_dir_user, filename='Buy_3.jpg')
-    return archivo
+    return send_file(io.BytesIO(valor_claro),
+                     attachment_filename=nombre_archivo,
+                     mimetype='text/plain')
 
 
 @servicios_basicos_bp.route("/subirArchivo", methods=['POST'])
