@@ -54,24 +54,49 @@
                         </thead>
                         <tbody>
                         {% for x in user.get_list_archivos()%}
-                        <tr onclick="{{('orderModal(' + x +')')}}">
-                            <td>{{x[0]}}</td>
+                        <tr onclick="{{'orderModal(\'' + x[0]+'\')'}}">
+                            <td><a href="#">{{x[0]}}</a></td>
                             <td>{{x[1]}}</td>
                         </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-                    <div id="orderModal" class="modal hide fade" role="dialog"
-                         aria-labelledby="orderModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                            <h3>Order</h3>
-                        </div>
-                        <div id="orderDetails" class="modal-body"></div>
-
-                        <div id="orderItems" class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                    <div id="orderModal" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form action="/serviciosBasicos/descargarArchivo" target="_blank" method="post">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Descargar archivo <span
+                                                class="nombreArchivoModal"></span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Para poder descargar el archivo <b><i><span class="nombreArchivoModal"></span></i></b> con
+                                            &eacute;xito, deber&aacute; introducir su secreto.</p>
+                                         <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon-nombre"><b>Nombre del archivo</b></span>
+                                            </div>
+                                            <input readonly type="text" id="nombreArchivoForm" name="nombre" class="form-control"
+                                                   aria-describedby="basic-addon-nombre">
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon-secreto"><b>Secreto</b></span>
+                                            </div>
+                                            <input type="password" name="secreto" class="form-control"
+                                                   aria-describedby="basic-addon-secreto" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Descargar archivo</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,12 +111,12 @@
         var fileName = $(this).val().replace(/^.*\\/, "");
         $(this).next(".custom-file-label").html(fileName);
     });
-    function orderModal(u){
-    $('#orderModal').modal({
-        keyboard: true,
-        backdrop: "static"
-    });
-};
+
+    function orderModal(u1) {
+        $('#nombreArchivoForm').val(u1);
+        $('.nombreArchivoModal').text(u1);
+        $('#orderModal').modal('toggle');
+    }
 </script>
 <script>
     $(function () {
