@@ -28,11 +28,12 @@ def establecer_password():
     return jsonify(isError=False, message="Success", statusCode=200), 200
 
 
-@servicios_basicos_bp.route("/descargarArchivo", methods=['GET'])
+@servicios_basicos_bp.route("/descargarArchivo", methods=['GET', 'POST'])
 @login_required
 def descargar_archivo():
     user = current_user
     nombre_archivo = request.values.get("nombre")
+    secreto = request.values.get("secreto")
     nombre_archivo = 'Buy_3.jpg'
     from main import uploads_dir
     uploads_dir_user = os.path.join(uploads_dir, user.id_mongo)
