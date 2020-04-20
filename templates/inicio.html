@@ -34,12 +34,15 @@
             </form>
             {% else %}
             <div class="alert alert-danger" role="alert">
-                No tiene establecida ninguna secreto para cifrar los ficheros, pulse <a href="/serviciosBasicos/establecerPasswordHTML" class="alert-link">aqu&iacute;</a> para establecerlo.
+                No tiene establecida ninguna secreto para cifrar los ficheros, pulse <a
+                    href="/serviciosBasicos/establecerPasswordHTML" class="alert-link">aqu&iacute;</a> para
+                establecerlo.
             </div>
             {% endif %}
             <hr>
             <div class="card">
-                <div class="card-header text-white bg-dark"><b>Archivos securizados almacenados en la aplicaci&oacute;n</b></div>
+                <div class="card-header text-white bg-dark"><b>Archivos securizados almacenados en la aplicaci&oacute;n
+                    Documentos Seguros</b></div>
                 <div class="card-body" style="font-size: large;">
                     <table id="example1" class="table table-bordered text-center"
                            style="width: 100%; display: table !important;">
@@ -50,14 +53,27 @@
                         </tr>
                         </thead>
                         <tbody>
-                            {% for x in user.get_list_archivos()%}
-                                <tr>
-                                    <td>{{x[0]}}</td>
-                                    <td>{{x[1]}}</td>
-                                </tr>
-                            {% endfor %}
+                        {% for x in user.get_list_archivos()%}
+                        <tr onclick="{{('orderModal(' + x +')')}}">
+                            <td>{{x[0]}}</td>
+                            <td>{{x[1]}}</td>
+                        </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
+                    <div id="orderModal" class="modal hide fade" role="dialog"
+                         aria-labelledby="orderModalLabel" aria-hidden="true">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            <h3>Order</h3>
+                        </div>
+                        <div id="orderDetails" class="modal-body"></div>
+
+                        <div id="orderItems" class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,6 +86,12 @@
         var fileName = $(this).val().replace(/^.*\\/, "");
         $(this).next(".custom-file-label").html(fileName);
     });
+    function orderModal(u){
+    $('#orderModal').modal({
+        keyboard: true,
+        backdrop: "static"
+    });
+};
 </script>
 <script>
     $(function () {
