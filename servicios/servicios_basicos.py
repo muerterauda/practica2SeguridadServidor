@@ -1,7 +1,7 @@
-import os
 import io
+import os
 
-from flask import Blueprint, redirect, url_for, request, render_template, jsonify, send_from_directory, send_file
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify, send_file
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -46,13 +46,15 @@ def descargar_archivo():
     cifrado = open(path_guardado, "rb").read()
     metadatos = open(path_guardado + ".metadata", "rb").read()
     metadatos = metadatos.decode()
-    metadatos = float(metadatos)
+    metadatos = metadatos.split("-", 1)
+    mimetype = metadatos[1]
+    metadatos = float(metadatos[0])
     key = generar_clave(user.password, metadatos)
     valor_claro = descifrar_archivo(cifrado, metadatos, key)
     return send_file(io.BytesIO(valor_claro),
                      attachment_filename=nombre_archivo,
                      as_attachment=True,
-                     mimetype='text/plain')
+                     mimetype=mimetype)
 
 
 @servicios_basicos_bp.route("/subirArchivo", methods=['POST'])
@@ -67,6 +69,7 @@ def recoger_datos_creacion():
         os.makedirs(uploads_dir_user)
     filename = secure_filename(archivo.filename)
     path_guardado = os.path.join(uploads_dir_user, filename)
+    mimetype = archivo.mimetype
     archivo.save(path_guardado)
     archivo = open(path_guardado, 'rb').read()
     # Obtenemos metadatos
@@ -80,7 +83,7 @@ def recoger_datos_creacion():
     # Guardamos archivo cifrado
     with open(path_guardado, 'wb') as f:
         f.write(cifrado)
-    metadatos = str(metadatos)
+    metadatos = str(metadatos) + "-" + str(mimetype)
     metadatos = metadatos.encode('utf-8')
     with open(path_guardado + ".metadata", 'wb') as f:
         f.write(bytes(metadatos))
