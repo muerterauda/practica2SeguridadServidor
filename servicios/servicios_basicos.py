@@ -38,10 +38,13 @@ def descargar_archivo():
     uploads_dir_user = os.path.join(uploads_dir, user.id_mongo)
     path_guardado = os.path.join(uploads_dir_user, nombre_archivo)
     cifrado = open(path_guardado, "rb").read()
-    with open(path_guardado + ".metadata", "rb") as f:
-        metadatos = f.read()
+    metadatos = open(path_guardado + ".metadata", "rb").read()
+    metadatos = metadatos.decode()
+    metadatos = float(metadatos)
     key = generar_clave(user.password, metadatos)
     valor_claro = descifrar_archivo(cifrado, metadatos, key)
+    with open(path_guardado + "2", "wb") as f:
+        f.write(valor_claro)
     archivo = send_from_directory(directory=uploads_dir_user, filename='Buy_3.jpg')
     return archivo
 
