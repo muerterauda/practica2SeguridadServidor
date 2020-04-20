@@ -46,6 +46,7 @@ def descargar_archivo():
     valor_claro = descifrar_archivo(cifrado, metadatos, key)
     return send_file(io.BytesIO(valor_claro),
                      attachment_filename=nombre_archivo,
+                     as_attachment=True,
                      mimetype='text/plain')
 
 
