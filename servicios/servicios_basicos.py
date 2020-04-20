@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
 from mongo.repository.usuario_repository import update_user_by_id, replace_user_by_id
-from utils.cipher.file_encoding import cifrar_archivo
+from utils.cipher.file_encoding import cifrar_archivo, descifrar_archivo
 from utils.key_management.keys import generar_clave, cifrar_clave
 
 servicios_basicos_bp = Blueprint('Seguridad_servicios_basicos', __name__, template_folder='templates')
@@ -39,6 +39,10 @@ def descargar_archivo():
     path_guardado = os.path.join(uploads_dir_user, nombre_archivo)
     with open(path_guardado, "rb") as f:
         cifrado = f.read()
+    with open(path_guardado + ".metadata", "rb") as f:
+        metadatos = f.read()
+    key = generar_clave(user.password, metadatos)
+    valor_claro = descifrar_archivo(cifrado, metadatos, key)
     archivo = send_from_directory(directory=uploads_dir_user, filename='Buy_3.jpg')
     return archivo
 
