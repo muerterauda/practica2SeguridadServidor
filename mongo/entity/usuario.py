@@ -1,5 +1,7 @@
-from flask_login import UserMixin
 from datetime import datetime
+
+from flask_login import UserMixin
+
 
 class User(UserMixin):
 
@@ -46,12 +48,13 @@ class User(UserMixin):
         return nombre in self.__archivos
 
     def guardar_archivo(self, nombre, clave_encriptado):
-        self.__archivos[nombre] = {'secreto': clave_encriptado, 'fecha_subida': datetime.now().strftime("%m/%d/%Y, %H:%M:%S")}
+        self.__archivos[nombre] = {'secreto': clave_encriptado,
+                                   'fecha_subida': datetime.now().strftime("%m/%d/%Y, %H:%M:%S")}
 
     def get_list_archivos(self):
         returned = []
         if self.__archivos is not None:
-            for x,y in self.__archivos.items():
+            for x, y in self.__archivos.items():
                 returned.append((x, y['fecha_subida']))
         return returned
 
@@ -67,7 +70,7 @@ class User(UserMixin):
     def __generar_list_archivos(diccionario: dict):
         returned = []
         if diccionario is not None:
-            for x,y in diccionario.items():
+            for x, y in diccionario.items():
                 returned.append((x, y['secreto'], y['fecha_subida']))
         return returned
 
