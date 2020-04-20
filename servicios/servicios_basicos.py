@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, redirect, url_for, request, render_template, jsonify
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify, Response, send_from_directory
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -24,6 +24,17 @@ def establecer_password():
     user.set_password(password)
     value = update_user_by_id(user.id_mongo, {'password': user.password})
     return jsonify(isError=False, message="Success", statusCode=200), 200
+
+@servicios_basicos_bp.route("/descargarArchivo", methods=['GET'])
+@login_required
+def descargar_archivo():
+    user = current_user
+    nombre_archivo = request.values.get("nombre")
+    nombre_archivo = 'Buy_3.jpg'
+    from main import uploads_dir
+    uploads_dir_user = os.path.join(uploads_dir, user.id_mongo)
+    archivo = send_from_directory(directory=uploads_dir_user, filename='Buy_3.jpg')
+    return archivo
 
 
 @servicios_basicos_bp.route("/subirArchivo", methods=['POST'])
