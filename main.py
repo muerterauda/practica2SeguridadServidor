@@ -3,7 +3,7 @@ import os
 
 import flask
 from flask import Flask, url_for, redirect, \
-    render_template, session, request, send_from_directory
+    render_template, request, send_from_directory, session
 from flask_login import LoginManager, login_required, current_user, logout_user, login_user
 from mysqlx import Auth
 from requests.exceptions import HTTPError
@@ -58,7 +58,9 @@ login_manager.session_protection = "strong"
 @login_manager.user_loader
 def load_user(user_id):
     if user_id:
-        return find_user_by_id(user_id)
+        u = find_user_by_id(user_id)
+        u.password = session.get(u.id_mongo, None)
+        return u
     else:
         return None
 
