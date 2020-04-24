@@ -12,9 +12,13 @@ class MongoManager:
         """
         username = 'seguridad'
         password = 'password_1'
-        self.collection = \
-        MongoClient('mongodb://%s:%s@localhost:27017' % (username, password), authSource='practica2Seguridad')[
-            'practica2Seguridad'][collection_name]
+        if online:
+            self.collection = MongoClient('mongodb+srv://practicas:3B07Ky0RUPsHhZfY@practicaseguridad-0rfcm.gcp.mongodb.net/test?retryWrites=true&w=majority')[
+                'practica2Seguridad'][collection_name]
+        else:
+            self.collection = \
+            MongoClient('mongodb://%s:%s@localhost:27017' % (username, password), authSource='practica2Seguridad')[
+                'practica2Seguridad'][collection_name]
 
     @staticmethod
     def bson_encoder(s):

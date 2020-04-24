@@ -53,7 +53,7 @@ class User(UserMixin):
         returned = {}
         if diccionario is not None:
             for x in diccionario:
-                returned[x[0]] = {'fecha_subida': x[2]}
+                returned[x[0]] = {'fecha_subida': x[1]}
         return returned
 
     @staticmethod
