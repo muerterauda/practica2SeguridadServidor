@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from mongo.repository.usuario_repository import replace_user_by_id
 from utils.cipher.file_encoding import cifrar_archivo, descifrar_archivo
 from utils.cipher.hash import generar_hash
-from utils.key_management.keys import generar_clave, cifrar_clave, generar_clave_archivo
+from utils.key_management.keys import generar_clave, cifrar_clave, generar_clave_archivo, descifrar_clave
 
 servicios_basicos_bp = Blueprint('Seguridad_servicios_basicos', __name__, template_folder='templates')
 
@@ -41,12 +41,15 @@ def descargar_archivo():
     uploads_dir_user = os.path.join(uploads_dir, user.id_mongo)
     path_guardado = os.path.join(uploads_dir_user, nombre_archivo)
     cifrado = open(path_guardado, "rb").read()
-    metadatos = open(path_guardado + ".metadata", "rb").read()
-    metadatos = metadatos.decode()
+    with open(path_guardado + ".metadata", "rb") as f:
+        metadatos = f.read()
+    metadatos = metadatos.decode('utf-8')
     metadatos = metadatos.split("~")
     mimetype = metadatos[1]
-    file_key = metadatos[2]
+    ciphered_file_key = metadatos[2]
+    file_key = descifrar_clave(ciphered_file_key)
     metadatos = float(metadatos[0])
+    file_key = file_key.decode('utf-8')
     key = generar_clave(file_key, secreto, metadatos)
     valor_claro = descifrar_archivo(cifrado, metadatos, key)
     return send_file(io.BytesIO(valor_claro),
@@ -83,13 +86,14 @@ def recoger_datos_creacion():
     # Guardamos archivo cifrado
     with open(path_guardado, 'wb') as f:
         f.write(cifrado)
-    metadatos = str(metadatos) + "~" + str(mimetype) + "~" + str(file_key)
+    # Ciframos la clave del archivo
+    ciphered_file_key = cifrar_clave(file_key)
+    ciphered_file_key = ciphered_file_key.hex()
+    metadatos = str(metadatos) + "~" + str(mimetype) + "~" + ciphered_file_key
     metadatos = metadatos.encode('utf-8')
     with open(path_guardado + ".metadata", 'wb') as f:
         f.write(bytes(metadatos))
-    # Ciframos la clave
-    ciphered_key = cifrar_clave(key)
     # Asociamos el archivo al usuario
-    user.guardar_archivo(filename, ciphered_key)
+    user.guardar_archivo(filename)
     replace_user_by_id(user.id_mongo, user)
     return redirect(url_for('inicio'))

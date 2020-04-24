@@ -5,6 +5,7 @@ from utils.cipher.hash import generar_hash
 
 
 def cifrar_archivo(archivo, metadatos, key):
+    key = bytes.fromhex(key)
     metadatos = str(metadatos)
     metadatos = generar_hash(valor=metadatos, tipo="128")
     algorithm = algorithms.ChaCha20(key, metadatos)
@@ -14,6 +15,7 @@ def cifrar_archivo(archivo, metadatos, key):
 
 
 def descifrar_archivo(archivo_cifrado, metadatos, key):
+    key = bytes.fromhex(key)
     metadatos = str(metadatos)
     metadatos = generar_hash(valor=metadatos, tipo="128")
     algorithm = algorithms.ChaCha20(key, metadatos)

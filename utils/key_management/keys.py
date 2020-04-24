@@ -13,17 +13,22 @@ def generar_clave_archivo(metadatos):
 
 
 def generar_clave(clave_archivo, secreto, add_data):
-    clave = str(clave_archivo) + str(secreto)
+    if type(clave_archivo) is str:
+        clave_archivo = bytes.fromhex(clave_archivo)
+    secreto = secreto.encode('utf-8')
+    clave = clave_archivo + secreto
     return generar_hash(valor=clave, datos_adicionales=add_data)
 
 
 def cifrar_clave(key):
+    key = key.encode('utf-8')
     client = kms_v1.KeyManagementServiceClient()
     response = client.encrypt(os.environ['PROJECT_KEY_PATH'], key)
     return response.ciphertext
 
 
 def descifrar_clave(ciphered_key):
+    ciphered_key = bytes.fromhex(ciphered_key)
     client = kms_v1.KeyManagementServiceClient()
     response = client.decrypt(os.environ['PROJECT_KEY_PATH'], ciphered_key)
     return response.plaintext

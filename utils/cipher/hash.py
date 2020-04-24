@@ -11,7 +11,8 @@ def generar_hash(valor, tipo=None, datos_adicionales=None):
         h = hashlib.shake_128()
     else:
         h = hashlib.sha256()
-    valor = valor.encode('utf-8')
+    if type(valor) is not bytes:
+        valor = valor.encode('utf-8')
     h.update(bytes(valor))
     if datos_adicionales:
         datos_adicionales = str(datos_adicionales).encode('utf-8')
@@ -19,7 +20,7 @@ def generar_hash(valor, tipo=None, datos_adicionales=None):
     if tipo:
         hash = h.digest(16)
     else:
-        hash = h.digest()
+        hash = h.hexdigest()
     return hash
 
 
