@@ -59,7 +59,8 @@ login_manager.session_protection = "strong"
 def load_user(user_id):
     if user_id:
         u = find_user_by_id(user_id)
-        u.password = session.get(u.id_mongo, None)
+        if u:
+            u.password = session.get(u.id_mongo, None)
         return u
     else:
         return None
