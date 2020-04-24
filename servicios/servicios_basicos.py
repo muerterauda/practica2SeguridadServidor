@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from mongo.repository.usuario_repository import update_user_by_id, replace_user_by_id
 from utils.cipher.file_encoding import cifrar_archivo, descifrar_archivo
 from utils.cipher.hash import generar_hash
-from utils.key_management.keys import generar_clave, cifrar_clave
+from utils.key_management.keys import generar_clave, cifrar_clave, generar_clave_archivo
 
 servicios_basicos_bp = Blueprint('Seguridad_servicios_basicos', __name__, template_folder='templates')
 
@@ -46,10 +46,11 @@ def descargar_archivo():
     cifrado = open(path_guardado, "rb").read()
     metadatos = open(path_guardado + ".metadata", "rb").read()
     metadatos = metadatos.decode()
-    metadatos = metadatos.split("-", 1)
+    metadatos = metadatos.split("~")
     mimetype = metadatos[1]
+    file_key = metadatos[2]
     metadatos = float(metadatos[0])
-    key = generar_clave(user.password, metadatos)
+    key = generar_clave(file_key, user.password, metadatos)
     valor_claro = descifrar_archivo(cifrado, metadatos, key)
     return send_file(io.BytesIO(valor_claro),
                      attachment_filename=nombre_archivo,
@@ -76,14 +77,16 @@ def recoger_datos_creacion():
     metadatos = os.path.getctime(path_guardado)
     # Eliminamos el archivo original
     os.remove(path_guardado)
+    # Generamos key para el archivo
+    file_key = generar_clave_archivo(metadatos)
     # Generamos key (esta clave ya está cifrada)
-    key = generar_clave(user.password, metadatos)
+    key = generar_clave(file_key, user.password, metadatos)
     # Ciframos archivo
     cifrado = cifrar_archivo(archivo, metadatos, key)
     # Guardamos archivo cifrado
     with open(path_guardado, 'wb') as f:
         f.write(cifrado)
-    metadatos = str(metadatos) + "-" + str(mimetype)
+    metadatos = str(metadatos) + "~" + str(mimetype) + "~" + str(file_key)
     metadatos = metadatos.encode('utf-8')
     with open(path_guardado + ".metadata", 'wb') as f:
         f.write(bytes(metadatos))
