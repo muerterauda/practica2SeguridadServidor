@@ -37,9 +37,6 @@ def descargar_archivo():
     user = current_user
     nombre_archivo = request.values.get("nombre")
     secreto = request.values.get("secreto")
-    hashed = generar_hash(secreto)
-    if hashed.hex() != user.password:
-        return "Secreto invalido", 403
     from main import uploads_dir
     uploads_dir_user = os.path.join(uploads_dir, user.id_mongo)
     path_guardado = os.path.join(uploads_dir_user, nombre_archivo)
@@ -50,7 +47,7 @@ def descargar_archivo():
     mimetype = metadatos[1]
     file_key = metadatos[2]
     metadatos = float(metadatos[0])
-    key = generar_clave(file_key, user.password, metadatos)
+    key = generar_clave(file_key, secreto, metadatos)
     valor_claro = descifrar_archivo(cifrado, metadatos, key)
     return send_file(io.BytesIO(valor_claro),
                      attachment_filename=nombre_archivo,
