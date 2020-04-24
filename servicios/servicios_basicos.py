@@ -1,11 +1,11 @@
 import io
 import os
 
-from flask import Blueprint, redirect, url_for, request, render_template, jsonify, send_file
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify, send_file, session
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
-from mongo.repository.usuario_repository import update_user_by_id, replace_user_by_id
+from mongo.repository.usuario_repository import replace_user_by_id
 from utils.cipher.file_encoding import cifrar_archivo, descifrar_archivo
 from utils.cipher.hash import generar_hash
 from utils.key_management.keys import generar_clave, cifrar_clave, generar_clave_archivo
@@ -26,8 +26,8 @@ def establecer_password():
     user = current_user
     password = request.values.get("password")
     hashed = generar_hash(password)
-    user.set_password(hashed.hex())
-    value = update_user_by_id(user.id_mongo, {'password': user.password})
+    user.password = hashed
+    session[user.id_mongo] = password
     return jsonify(isError=False, message="Success", statusCode=200), 200
 
 

@@ -12,19 +12,10 @@ class User(UserMixin):
         self.id = diccionario.get('id')
         self.name = diccionario.get('name')
         self.avatar = diccionario.get('avatar')
-        self.__password = diccionario.get('password')
         self.__archivos = self.__generar_dict_archivos(diccionario.get('archivos'))
 
     def user_to_dict(self) -> dict:
-        return {"id": self.id, "name": self.name, "avatar": self.avatar, 'password': self.__password,
-                'archivos': self.__generar_list_archivos(self.__archivos)}
-
-    @property
-    def password(self):
-        return self.__password
-
-    def set_password(self, password):
-        self.__password = password
+        return {"id": self.id, "name": self.name, "avatar": self.avatar, 'archivos': self.__generar_list_archivos(self.__archivos)}
 
     @property
     def id_mongo(self):
@@ -47,9 +38,8 @@ class User(UserMixin):
     def comprobar_archivo(self, nombre):
         return nombre in self.__archivos
 
-    def guardar_archivo(self, nombre, clave_encriptado):
-        self.__archivos[nombre] = {'secreto': clave_encriptado,
-                                   'fecha_subida': datetime.now().strftime("%m/%d/%Y, %H:%M:%S")}
+    def guardar_archivo(self, nombre):
+        self.__archivos[nombre] = {'fecha_subida': datetime.now().strftime("%m/%d/%Y, %H:%M:%S")}
 
     def get_list_archivos(self):
         returned = []
@@ -63,7 +53,7 @@ class User(UserMixin):
         returned = {}
         if diccionario is not None:
             for x in diccionario:
-                returned[x[0]] = {'secreto': x[1], 'fecha_subida': x[2]}
+                returned[x[0]] = {'fecha_subida': x[2]}
         return returned
 
     @staticmethod
@@ -71,7 +61,7 @@ class User(UserMixin):
         returned = []
         if diccionario is not None:
             for x, y in diccionario.items():
-                returned.append((x, y['secreto'], y['fecha_subida']))
+                returned.append((x, y['fecha_subida']))
         return returned
 
     def __str__(self):

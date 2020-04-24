@@ -16,7 +16,7 @@
     <hr>
     <div class="row flex-x1-nowrap text-center" style="margin-bottom: 10px;">
         <div class="offset-lg-3 col-lg-6 col-md-8">
-            {% if user.password != '' %}
+            {% if user.password %}
             <form lang="es" action="/serviciosBasicos/subirArchivo" method="POST" id="myForm"
                   enctype="multipart/form-data">
                 <div class="input-group mb-3">
@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <p>Para poder descargar el archivo <b><i><span class="nombreArchivoModal"></span></i></b> con
-                                            &eacute;xito, deber&aacute; introducir su secreto.</p>
+                                            &eacute;xito, deber&aacute; introducir el secreto que uso para cifrar el archivo.</p>
                                          <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon-nombre"><b>Nombre del archivo</b></span>
