@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "practicasegurdadatrest",
+  "private_key_id": "481ffbd204056c16eaa9bf1b94a166635d524ade",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDVFeo4Oq7+4PUC\n9KBP3SuG3LtPNjVJRBTHvhp47irV810A5av1loL/RiAkmn0DnUDhXsXp9FPucaF1\nVjdqtQCK9uSmQUoEb0Z406nkRXg5mNIXU0nJZ62ICLk/tRajK3CJff7ysbCP6AhW\nYwdXGkyXyW78raCXnRmo+ghog6zMSZ0aVBpJBa7jLqMzOd5Ucq8y+APvXulASbSk\nNdf7FQ4EvSVjY4EkKbriycyZA/zvN+Dv/tCb/YzHeS9lgteZo8YevAmnY4XNaVYL\nrC6AaGY1BRmjWKAqlUv8aYLHTXdFWWzQoxGIWk7qcEs8i/7qdxHs05PIYc6/fvbR\n6u0xKd8HAgMBAAECggEAUXVawBsi+dnKoFIfFNjSgnBQhMQO087ceM1iNlep9Xde\n1vB17+EVe/v1XrjWULLlciJ2W20lRtKWrBIFBlxidD1VBH+SCab2VEtqN5MdFjun\nGPakjwN88bOQCdwy5ra9Azqw41ttSV4lDc02qaQqop4FOUAw07Thcdj/rOClhsRs\ntHgluuTg5cyYRMZKIKsWlRN3aGxr1TlaO5kpeAUGdH2bEBpg1M1SM1vrjB+tqeRU\nnChfjyItgOmiBv//DCNqzY3UIx3r7o8ZmlI+hDa4+DE0lkzlXYOtDsSz26GPbcEk\n3EwghcCOWRClhI0HC3adyE1qRkKwPqTLaP6uamQvtQKBgQD0IyhQXdlh7Ah21+wF\n2cvx0sepDjh0GGDGY1j4+8W9nlozqirCMFjYw2ckoCtJ7gkAwVUetTim3dSUXKAL\nbNqOBtcf6TY4xYHU6iQRL6fMxnD4o4CTCJHaUVWlJDQLiPX1zXZucuxtW3QR5QLz\nOl/rpCNZkb7lO2f9bnCQe2cR0wKBgQDfcICvHwTMqiu/HvxgoD3bt4CZISXsdhot\natHLP7hKUetA6sKAmXnTJBbvhNuvYv27SONMJONKYF23yYSXS3N0LR77Esmgq+45\n7ozFQYj8O2D+mEnYBmijeNZltWVM0qSUKlNEvvumzETAX19HLtrdewaoHN3a/M0f\nP7lKm5tJfQKBgQDZtfx+ZqKzQzRtHrJYqVfIx8nLRWYsiYzLfc7bAlLdfLg9uHM3\nBrxEWUTCkZ7o57/Zj47juoHRtKKcx1jlt2XTH+B5kZQL3n2gLEiLlu7RmukloVDI\nTe0bPkrc4MMUwkdsspP5fLy/7L0+M/aEhrsBPTdU6bbNX0Ol6fWxsopAhwKBgQDZ\nGth+0DX6o5K0Nuhk/u58EjZrE/FkbHENFlDZG4X2+NgMkM8C452i0dtTShWnuhju\npGju8JzFBROq46zo0RBSnxEORngRnV1xft/bPs1awFuDpfeCZt+/j0dLNlFCrx3p\nNaMJFkUxEiPvg/vxD47sS4DxUnMjOCYbKfDhlIbzhQKBgCsygODv4cI2itmDOvR9\n7bEbNDnfwx4z5+srwTwPh2qZtgmLwf9j66PwOgHpSWFvmZG9y6b/sVRAlIqXH3LS\nQwxT2ifR6PMN1waKx8QLg1ozaJwGK/jiCpGYraWTOpkuo02AFl/ICSAUq2rReJCC\n2laZ3HLDmjIVInFjHIiEVM59\n-----END PRIVATE KEY-----\n",
+  "client_email": "seguridadatrest@practicasegurdadatrest.iam.gserviceaccount.com",
+  "client_id": "107478340341349387394",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/seguridadatrest%40practicasegurdadatrest.iam.gserviceaccount.com"
+}
